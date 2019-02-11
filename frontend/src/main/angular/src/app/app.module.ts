@@ -4,14 +4,23 @@ import {NgModule} from '@angular/core';
 import {AppRoutingModule} from './app-routing.module';
 import {AppComponent} from './app.component';
 import {HttpClientModule} from "@angular/common/http";
-import {CarListComponent} from './car-list/car-list.component';
+import {StockPriceListComponent} from './stock-price-list/stock-price-list.component';
 import {BrowserAnimationsModule} from "@angular/platform-browser/animations";
-import {MatButtonModule, MatCardModule, MatInputModule, MatListModule, MatToolbarModule, MatTableModule} from '@angular/material';
+import {
+  MatButtonModule,
+  MatCardModule,
+  MatInputModule,
+  MatListModule,
+  MatToolbarModule,
+  MatTableModule,
+  MatIconModule, MatButtonToggleModule, MatPaginatorModule
+} from '@angular/material';
+import {FormsModule, ReactiveFormsModule} from "@angular/forms";
 
 @NgModule({
   declarations: [
     AppComponent,
-    CarListComponent
+    StockPriceListComponent
   ],
   imports: [
     BrowserModule,
@@ -23,7 +32,12 @@ import {MatButtonModule, MatCardModule, MatInputModule, MatListModule, MatToolba
     MatInputModule,
     MatListModule,
     MatToolbarModule,
-    MatTableModule
+    MatTableModule,
+    MatButtonToggleModule,
+    MatIconModule,
+    MatPaginatorModule,
+    FormsModule,
+    ReactiveFormsModule
   ],
   providers: [],
   bootstrap: [AppComponent]
