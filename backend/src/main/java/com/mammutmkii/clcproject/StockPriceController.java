@@ -1,10 +1,7 @@
 package com.mammutmkii.clcproject;
 
 import org.springframework.data.redis.core.RedisTemplate;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -19,16 +16,19 @@ class StockPriceController {
     }
 
     @GetMapping("/symbols") //fix openshift access
+    @ResponseBody
     public Collection<String> getSymbols() {
         return template.keys("*");
     }
 
     @GetMapping("/stockPrices/{symbol}")
+    @ResponseBody
     public Collection<StockPrice> getStockPrices(@PathVariable("symbol") String symbol) {
         return template.opsForZSet().range(symbol, 0, -1);
     }
 
     @GetMapping("/stockPrices/{symbol}/limit/{limit}/offset/{offset}")
+    @ResponseBody
     public StockPricePagination getStockPrices(@PathVariable("symbol") String symbol,
                                                  @PathVariable("limit") int limit,
                                                  @PathVariable("offset") int offset) {

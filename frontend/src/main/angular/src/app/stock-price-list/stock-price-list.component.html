@@ -23,7 +23,7 @@
       <td mat-cell *matCellDef="let element"> {{element.time}} </td>
     </ng-container>
 
-    <tr mat-header-row *matHeaderRowDef="['price', 'size', 'time']"></tr>
+    <tr mat-header-row *matHeaderRowDef="['time', 'size', 'price']"></tr>
     <tr mat-row *matRowDef="let row; columns: ['time', 'size', 'price'];"></tr>
   </table>
   <mat-paginator [length]="length"

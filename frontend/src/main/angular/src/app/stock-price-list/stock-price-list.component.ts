@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { StockPriceService } from '../shared/stock-price/stock-price.service';
 import {PageEvent} from "@angular/material";
+import {StockPrice} from "../dto/StockPrice";
 
 @Component({
   selector: 'app-stock-price-list',
@@ -8,14 +9,14 @@ import {PageEvent} from "@angular/material";
   styleUrls: ['./stock-price-list.component.css']
 })
 export class StockPriceListComponent implements OnInit {
-  symbols: Array<any>;
-  currentSymbol: any;
+  symbols: Array<string>;
+  currentSymbol: string;
 
-  length: any;
-  pageSize: any;
+  length: number;
+  pageSize: number;
   pageSizeOptions = [5, 10, 20, 100];
 
-  stockPrices: Array<any>;
+  stockPrices: Array<StockPrice>;
 
   pageEvent: PageEvent;
 
@@ -33,7 +34,7 @@ export class StockPriceListComponent implements OnInit {
     });
   }
 
-  updateStockPrices(symbol: any, limit: any, offset:any) {
+  updateStockPrices(symbol: string, limit: number, offset:number) {
     this.stockPriceService.getStockPricesPagination(symbol, limit, offset).subscribe(stockPricePagination => {
       console.log(stockPricePagination);
       this.length = stockPricePagination.length;
