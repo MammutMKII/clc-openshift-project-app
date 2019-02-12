@@ -1,0 +1,25 @@
+apiVersion: v1
+kind: Endpoints
+metadata:
+  labels:
+    app: backend
+    expose: 'true'
+    group: com.mammutmkii.clcproject
+    provider: fabric8
+    version: 0.0.1-SNAPSHOT
+  name: backend
+  namespace: clcproject
+subsets:
+  - addresses:
+      - ip: 10.128.20.249
+        nodeName: ip-172-31-26-19.ca-central-1.compute.internal
+        targetRef:
+          kind: Pod
+          name: backend-26-2nmtn
+          namespace: clcproject
+          resourceVersion: '1703014476'
+          uid: a438acda-2eae-11e9-9d8d-02ec8e61afcf
+    ports:
+      - name: http
+        port: 8080
+        protocol: TCP

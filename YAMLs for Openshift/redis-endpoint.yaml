@@ -1,0 +1,22 @@
+apiVersion: v1
+kind: Endpoints
+metadata:
+  labels:
+    app: redis-ephemeral
+    template: redis-ephemeral-template
+  name: redis-instance
+  namespace: clcproject
+subsets:
+  - addresses:
+      - ip: 10.130.19.26
+        nodeName: ip-172-31-23-0.ca-central-1.compute.internal
+        targetRef:
+          kind: Pod
+          name: redis-instance-3-ls224
+          namespace: clcproject
+          resourceVersion: '1702558734'
+          uid: d1c8afdd-2e33-11e9-a0e6-02d8407159d1
+    ports:
+      - name: redis
+        port: 6379
+        protocol: TCP

@@ -1,0 +1,122 @@
+apiVersion: apps.openshift.io/v1
+kind: DeploymentConfig
+metadata:
+  annotations:
+    fabric8.io/git-branch: master
+    fabric8.io/git-commit: 728a0b0f7c23d78874a3235b391ba64f95742cde
+    fabric8.io/iconUrl: img/icons/spring-boot.svg
+    fabric8.io/metrics-path: >-
+      dashboard/file/kubernetes-pods.json/?var-project=backend&var-version=0.0.1-SNAPSHOT
+    fabric8.io/scm-tag: HEAD
+    fabric8.io/scm-url: >-
+      https://github.com/spring-projects/spring-boot/spring-boot-starter-parent/parent/backend
+  labels:
+    app: backend
+    group: com.mammutmkii.clcproject
+    provider: fabric8
+    version: 0.0.1-SNAPSHOT
+  name: backend
+  namespace: clcproject
+spec:
+  replicas: 1
+  revisionHistoryLimit: 2
+  selector:
+    app: backend
+    group: com.mammutmkii.clcproject
+    provider: fabric8
+  strategy:
+    activeDeadlineSeconds: 21600
+    resources: {}
+    rollingParams:
+      intervalSeconds: 1
+      maxSurge: 25%
+      maxUnavailable: 25%
+      timeoutSeconds: 3600
+      updatePeriodSeconds: 1
+    type: Rolling
+  template:
+    metadata:
+      annotations:
+        fabric8.io/git-branch: master
+        fabric8.io/git-commit: 728a0b0f7c23d78874a3235b391ba64f95742cde
+        fabric8.io/iconUrl: img/icons/spring-boot.svg
+        fabric8.io/metrics-path: >-
+          dashboard/file/kubernetes-pods.json/?var-project=backend&var-version=0.0.1-SNAPSHOT
+        fabric8.io/scm-tag: HEAD
+        fabric8.io/scm-url: >-
+          https://github.com/spring-projects/spring-boot/spring-boot-starter-parent/parent/backend
+      creationTimestamp: null
+      labels:
+        app: backend
+        group: com.mammutmkii.clcproject
+        provider: fabric8
+        version: 0.0.1-SNAPSHOT
+    spec:
+      containers:
+        - env:
+            - name: SPRING_REDIS_URL
+              valueFrom:
+                secretKeyRef:
+                  key: database-connection-string
+                  name: redis-instance
+            - name: KUBERNETES_NAMESPACE
+              valueFrom:
+                fieldRef:
+                  apiVersion: v1
+                  fieldPath: metadata.namespace
+          image: >-
+            docker-registry.default.svc:5000/clcproject/backend
+          imagePullPolicy: IfNotPresent
+          livenessProbe:
+            failureThreshold: 3
+            httpGet:
+              path: /actuator/health
+              port: 8080
+              scheme: HTTP
+            initialDelaySeconds: 180
+            periodSeconds: 10
+            successThreshold: 1
+            timeoutSeconds: 1
+          name: spring-boot
+          ports:
+            - containerPort: 8080
+              name: http
+              protocol: TCP
+            - containerPort: 9779
+              name: prometheus
+              protocol: TCP
+            - containerPort: 8778
+              name: jolokia
+              protocol: TCP
+          readinessProbe:
+            failureThreshold: 3
+            httpGet:
+              path: /actuator/health
+              port: 8080
+              scheme: HTTP
+            initialDelaySeconds: 20
+            periodSeconds: 10
+            successThreshold: 1
+            timeoutSeconds: 1
+          resources: {}
+          securityContext:
+            privileged: false
+          terminationMessagePath: /dev/termination-log
+          terminationMessagePolicy: File
+      dnsPolicy: ClusterFirst
+      restartPolicy: Always
+      schedulerName: default-scheduler
+      securityContext: {}
+      terminationGracePeriodSeconds: 30
+  test: false
+  triggers:
+    - type: ConfigChange
+    - imageChangeParams:
+        automatic: true
+        containerNames:
+          - spring-boot
+        from:
+          kind: ImageStreamTag
+          name: 'backend:latest'
+          namespace: clcproject
+      type: ImageChange

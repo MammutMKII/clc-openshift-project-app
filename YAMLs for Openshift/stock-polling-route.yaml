@@ -1,0 +1,19 @@
+apiVersion: route.openshift.io/v1
+kind: Route
+metadata:
+  annotations:
+    openshift.io/generated-by: OpenShiftWebConsole
+    openshift.io/host.generated: 'true'
+  labels:
+    app: stock-polling
+  name: stock-polling
+  namespace: clcproject
+spec:
+  host: stock-polling-clcproject.193b.starter-ca-central-1.openshiftapps.com
+  port:
+    targetPort: 8080-tcp
+  to:
+    kind: Service
+    name: stock-polling
+    weight: 100
+  wildcardPolicy: None

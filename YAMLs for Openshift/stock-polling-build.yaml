@@ -1,0 +1,58 @@
+apiVersion: build.openshift.io/v1
+kind: BuildConfig
+metadata:
+  annotations:
+    openshift.io/generated-by: OpenShiftWebConsole
+  labels:
+    app: stock-polling
+  name: stock-polling
+  namespace: clcproject
+spec:
+  nodeSelector: null
+  output:
+    to:
+      kind: ImageStreamTag
+      name: 'stock-polling:latest'
+  postCommit: {}
+  resources: {}
+  runPolicy: Serial
+  source:
+    git:
+      ref: master
+      uri: 'https://github.com/MMayr96/StockPoller.git'
+    type: Git
+  strategy:
+    sourceStrategy:
+      env:
+        - name: REDIS_PW
+          valueFrom:
+            secretKeyRef:
+              key: database-password
+              name: redis-instance
+        - name: REDIS_HOST
+          valueFrom:
+            secretKeyRef:
+              key: database-host
+              name: redis-instance
+        - name: REDIS_DB_PORT
+          valueFrom:
+            secretKeyRef:
+              key: database-port
+              name: redis-instance
+        - name: POLL_INTERVAL
+          value: '600'
+      from:
+        kind: ImageStreamTag
+        name: 'python:3.6'
+        namespace: openshift
+    type: Source
+  triggers:
+    - imageChange:
+      type: ImageChange
+    - type: ConfigChange
+    - generic:
+        secret: f98da447f30b54bb
+      type: Generic
+    - github:
+        secret: 4b84ac4db27f95c7
+      type: GitHub
